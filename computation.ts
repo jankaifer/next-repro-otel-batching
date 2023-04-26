@@ -7,7 +7,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const tracesFunction = async (arg: number) => {
   await tracer.startActiveSpan(`function ${arg}`, async (span) => {
     try {
-      await sleep(10);
+      // Do nothing
     } finally {
       span.end();
     }
@@ -16,7 +16,7 @@ const tracesFunction = async (arg: number) => {
 
 export async function computation({ tracer }: { tracer: Tracer }) {
   await tracer.wrap("component", async () => {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10000; i++) {
       await tracesFunction(i);
     }
   });

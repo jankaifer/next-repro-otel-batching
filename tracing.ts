@@ -2,6 +2,7 @@ export type Trace = {
   name: string;
   startTimeMs: number;
   endTimeMs: number;
+  durationMs: number;
 };
 
 export class Tracer {
@@ -21,7 +22,8 @@ export class Tracer {
     const startTimeMs = this.currentTimeMs();
     return fn().finally(() => {
       const endTimeMs = this.currentTimeMs();
-      this.traces.push({ name, startTimeMs, endTimeMs });
+      const durationMs = endTimeMs - startTimeMs;
+      this.traces.push({ name, startTimeMs, endTimeMs, durationMs });
     });
   }
 }

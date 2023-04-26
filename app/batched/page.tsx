@@ -1,6 +1,7 @@
 import { Component } from "../../component";
 
-export function Page() {
-  // @ts-ignore
+export const revalidate = 0;
+
+export default function Page() {
   return <Component batched={true} />;
 }
