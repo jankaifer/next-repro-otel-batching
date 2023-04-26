@@ -23,18 +23,19 @@ export const Component: (props: { batched: boolean }) => JSX.Element = (async ({
   await tracer.wrap("initialize", async () => {
     provider = new NodeTracerProvider({
       resource: new Resource({
-        [SemanticResourceAttributes.SERVICE_NAME]: "next-app",
+        [SemanticResourceAttributes.SERVICE_NAME]: `next-app-${
+          batched ? "batched" : "simple"
+        }`,
       }),
     });
     provider.addSpanProcessor(new processor(exporter));
-
-    provider.register();
   });
 
-  await computation({ tracer });
+  await computation({ tracer, provider });
 
   await tracer.wrap("shutdown", async () => {
-    provider.shutdown();
+    await provider.forceFlush();
+    await provider.shutdown();
   });
 
   const traces = tracer.flushTraces();

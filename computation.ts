@@ -1,23 +1,30 @@
-import { trace } from "@opentelemetry/api";
+import { trace, context } from "@opentelemetry/api";
+import type { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
 import { Tracer } from "./tracing";
-const tracer = trace.getTracer("otel-batching-component");
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const tracesFunction = async (arg: number) => {
-  await tracer.startActiveSpan(`function ${arg}`, async (span) => {
-    try {
-      // Do nothing
-    } finally {
-      span.end();
-    }
-  });
-};
-
-export async function computation({ tracer }: { tracer: Tracer }) {
-  await tracer.wrap("component", async () => {
+export async function computation({
+  tracer,
+  provider,
+}: {
+  tracer: Tracer;
+  provider: NodeTracerProvider;
+}) {
+  const otelTracer = provider.getTracer("tracer");
+  await tracer.wrap("computation", async () => {
+    const parentSpan = otelTracer.startSpan(`computation`);
+    const ctx = trace.setSpan(context.active(), parentSpan);
     for (let i = 0; i < 10000; i++) {
-      await tracesFunction(i);
+      const innerSpan = await otelTracer.startSpan(
+        `function ${i}`,
+        undefined,
+        ctx
+      );
+      innerSpan.end();
+      if (i % 1000 === 0) {
+        console.log("force slushing");
+        await provider.forceFlush();
+      }
     }
+    parentSpan.end();
   });
 }
