@@ -23,7 +23,12 @@ export class Tracer {
     return fn().finally(() => {
       const endTimeMs = this.currentTimeMs();
       const durationMs = endTimeMs - startTimeMs;
-      this.traces.push({ name, startTimeMs, endTimeMs, durationMs });
+      this.traces.push({
+        name,
+        // startTimeMs,
+        // endTimeMs,
+        durationMs,
+      });
     });
   }
 }

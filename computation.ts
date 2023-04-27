@@ -21,7 +21,6 @@ export async function computation({
       );
       innerSpan.end();
       if (i % 1000 === 0) {
-        console.log("force slushing");
         await provider.forceFlush();
       }
     }
