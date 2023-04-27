@@ -1,7 +1,7 @@
 export type Trace = {
   name: string;
-  startTimeMs: number;
-  endTimeMs: number;
+  // startTimeMs: number;
+  // endTimeMs: number;
   durationMs: number;
 };
 
