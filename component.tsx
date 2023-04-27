@@ -1,5 +1,5 @@
 import { OTLPTraceExporter as HttpOTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
-import { OTLPTraceExporter as GrpcOTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
+// import { OTLPTraceExporter as GrpcOTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
 import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import {
@@ -30,7 +30,7 @@ export const Component: (props: {
   const exporterClass = {
     console: ConsoleSpanExporter,
     http: HttpOTLPTraceExporter,
-    grpc: GrpcOTLPTraceExporter,
+    // grpc: GrpcOTLPTraceExporter,
   }[exporterType];
 
   let provider: NodeTracerProvider;
